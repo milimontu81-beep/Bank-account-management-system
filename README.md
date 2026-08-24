@@ -23,6 +23,19 @@ A simple Python-based Bank Account Management System.
 
 - Python 3
 
+## How to Run
+
+### Requirements
+- Python 3.x
+- No external libraries required
+
+### Steps
+
+1. Open the `Bank_system-v1` folder.
+2. Download `main.py` and `
+3. Run `bank_system.py` using Python 3. 
+4. Follow the instructions shown in the terminal.
+
 ---
 
 ## Version 2
@@ -65,6 +78,21 @@ After successfully logging in:
 - Python 3
 - JSON (built-in Python module)
 
+## How to Run
+
+### Requirements
+- Python 3.x
+- No external libraries required
+
+### Steps
+
+1. Open the `Bank_system-v2` folder.
+2. Download `main.py` and `bank_data.json`.
+3. Keep both files in the same folder.
+4. Run `main.py` using Python 3.
+5. Follow the instructions shown in the terminal.
+
 ### Project Progression
 
 Version 2 is an upgrade of Version 1. It adds persistent data storage, multiple-user support, account creation, login, and transaction history using JSON.
+
