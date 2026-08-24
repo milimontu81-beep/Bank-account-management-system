@@ -82,3 +82,125 @@ def ACCOUNT():
         print("------------------------------------")
       else:
         account.debit(amount)
+        account.see_history()
+        with open("bank_data.json","r") as file:
+         data=json.load(file)
+        data[accountnumber]["balance"]-=amount
+        with open("bank_data.json","w") as file:    
+         json.dump(data,file)
+    elif choice==5:
+      print("==THANKS FOR USING OUR BANK==")
+      print("------------------------------------")
+      break 
+#show balance after each transaction 
+    elif choice==3:
+      account.see_balance()
+    elif choice==4:
+      print("==TRANSACTION HISTORY==")
+      with open("bank_data.json","r") as file:
+        data=json.load(file)
+        if len(data[accountnumber]["transaction_history"])==0:
+         print(" No transaction history found!")
+        else:
+         print("-Transaction history:")
+         print(data[accountnumber]["history"])       
+         print("------------------------------------")    
+#handle invalid input
+    else:  
+      print("-Invalid choice: please enter a no. between 1 to 5!")
+      print("------------------------------------")
+   except:
+     print("-Invalid input:please enter an integer!")
+     print("------------------------------------")
+#menu of the bank account management system 
+def createaccount():
+  with open("bank_data.json","r") as file:
+   data=json.load(file)
+   data[accountnumber]={"name":username,"password":password,"accountnumber":accountnumber,"balance":0,"transaction_history":[],"history":"","phonenumber":phonenumber}
+   data["accountnumber"].append(accountnumber)
+   data["phonenumber"].append(phonenumber)
+   data["name"].append(username)
+   with open("bank_data.json","w") as file:
+     json.dump(data,file)
+     user_name=username.upper()
+     print(f"-{user_name} your  account has been created successfully!")
+     print("-Your account number is:",accountnumber)
+     print("-Your password is:",password)
+     print("-Your phone number is:",phonenumber)
+     print("------------------------------------") 
+#menu of the bank account management system 
+print("===WELCOME TO THE BANK OF INDIA===")
+print("ENTER-1-LOGIN")
+print("ENTER-2-CREATE ACCOUNT ")
+print("ENTER-3-EXIT")
+#create a loop to run the program until the user exits
+while True:
+#to handle invalid input
+ try:
+#take the menu user choice
+  choice=int(input("-ENTER YOUR CHOICE:"))
+  print("------------------------------------")
+  if choice==1:
+    with open("bank_data.json","r") as file:
+      data=json.load(file)
+      print("===LOGIN===")
+#take the user input for login
+    try:
+      username=input("-ENTER YOUR USERNAME:")
+      accountnumber=input("-ENTER YOUR ACCOUNT NUMBER:")
+      password=input("-ENTER YOUR PASSWORD:")
+      stored_password=data[accountnumber]["password"]
+      name=data[accountnumber]["name"]
+      if accountnumber in data["accountnumber"] and username == name and password == stored_password:
+#call the account function to perform the operations
+       ACCOUNT()
+      else:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+    except:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+  elif choice==2:
+   
+    print("===CREATE ACCOUNT===")
+#take the user input for creating account
+    username=input("-ENTER YOUR USERNAME:")
+    accountnumber=input("-ENTER 10 DIGIT ACCOUNT NUMBER:")
+    with open("bank_data.json","r") as file:
+     data=json.load(file)
+    if accountnumber in data["accountnumber"]:
+     print("-ACCOUNT NUMBER ALREADY EXISTS!")
+     print("------------------------------------")
+    elif len(str(accountnumber))!=10:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    elif accountnumber.isdigit()==False:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    else:
+     password=input("-ENTER 8 CHARACTER TO CREATE PASSWORD:")
+     if len(str(password))!=8:
+      print("-INVALID PASSWORD, ENTER AN 8 CHARACTER PASSWORD!")
+      print("------------------------------------")
+     else:
+      phonenumber=input("-ENTER YOUR PHONE NUMBER:")
+      if len(phonenumber)!=10 or phonenumber.isdigit()==False:
+       print("-INVALID PHONE NUMBER, ENTER A 10 DIGIT NUMBER!")
+       print("-----------------------------------")
+      elif phonenumber in data["phonenumber"]:
+       print("-PHONE NUMBER ALREADY EXISTS!")
+       print("-----------------------------------") 
+      else:
+        createaccount()
+  elif choice==3:
+    print("==THANKS==")
+    break
+  else:
+   print("-INVALID CHOICE, ENTER 1 OR 2!")
+   print("---------------------------------------")
+ except:
+  print("-INVALID INPUT, ENTER AN INTEGER!")
+  print("----------------------------------------")
+    
+    
+
