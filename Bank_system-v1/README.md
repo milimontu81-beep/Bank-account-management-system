@@ -23,6 +23,15 @@ Technologies Used
 
 - Python 3
 
-Author
+## How to Run
 
-Montu Mili
+### Requirements
+- Python 3.x
+- No external libraries required
+
+### Steps
+
+1. Open the `Bank_system-v1` folder.
+2. Download `main.py` and `
+3. Run `bank_system.py` using Python 3. 
+4. Follow the instructions shown in the terminal.
