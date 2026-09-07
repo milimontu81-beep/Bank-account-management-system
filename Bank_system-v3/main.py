@@ -191,3 +191,54 @@ while True:
    
     print("===CREATE ACCOUNT===")
 #take the user input for creating account
+    username=input("-ENTER YOUR USERNAME:")
+    accountnumber=input("-ENTER 10 DIGIT ACCOUNT NUMBER:")
+    
+    accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
+    if accountnumberlist:
+     print("-ACCOUNT NUMBER ALREADY EXISTS!")
+     print("------------------------------------")
+    elif len(str(accountnumber))!=10:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    elif accountnumber.isdigit()==False:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    else:
+     password=input("-ENTER 8 CHARACTER TO CREATE PASSWORD:")
+     if len(str(password))!=8:
+      print("-INVALID PASSWORD, ENTER AN 8 CHARACTER PASSWORD!")
+      print("------------------------------------")
+     else:
+      phonenumber=input("-ENTER YOUR PHONE NUMBER:")
+      phonenumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE phonenumber=?""",(phonenumber,)).fetchall()
+      if len(phonenumber)!=10 or phonenumber.isdigit()==False:
+       print("-INVALID PHONE NUMBER, ENTER A 10 DIGIT NUMBER!")
+       print("-----------------------------------")
+      elif phonenumberlist:
+       print("-PHONE NUMBER ALREADY EXISTS!")
+       print("-----------------------------------") 
+      else:
+#create new table for each user for saving there transaction history 
+        cursor.execute(f"""CREATE TABLE IF NOT EXISTS "{accountnumber}"(serialnumber INTEGER PRIMARY KEY AUTOINCREMENT,history TEXT,balancebefore TEXT,balanceafter TEXT)""")
+        connection.commit()
+        createaccount()
+#exit from the application 
+  elif choice==3:
+    print("==THANKS==")
+    break
+  else:
+   print("-INVALID CHOICE, ENTER 1 OR 2!")
+   print("---------------------------------------")
+ except:
+  print("-INVALID INPUT, ENTER AN INTEGER!")
+  print("----------------------------------------")
+    
+    
+
+                   
+                   
+              
+
+      
+
