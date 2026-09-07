@@ -130,3 +130,64 @@ def ACCOUNT(accountnumber):
          print(" No transaction history found!")
       else: 
          print("-Transaction history:")
+         for i in History:
+           print(f"{i[0]}.{i[1]},balancebefore Rs.{i[2]},balanceafter Rs.{i[3]}")
+         print("------------------------------------")    
+#handle invalid input
+    else:  
+      print("-Invalid choice: please enter a no. between 1 to 5!")
+      print("------------------------------------")
+   except:
+     print("-Invalid input:please enter an integer!")
+     print("------------------------------------")
+#save the account information after account has been created
+def createaccount():
+     cursor.execute("""INSERT INTO accounts(accountnumber,username,password,phonenumber)
+     VALUES(?,?,?,?)""",(accountnumber,username, password,phonenumber))
+     connection.commit()
+     user_name=username.upper()
+     print(f"-''{user_name}', your  account has been created successfully!")
+     print("-Your account number is:",accountnumber)
+     print("-Your password is:",password)
+     print("-Your phone number is:",phonenumber)
+     print("------------------------------------") 
+#menu of the bank account management system 
+print("===WELCOME TO THE BANK OF INDIA===")
+print("ENTER-1-LOGIN")
+print("ENTER-2-CREATE ACCOUNT ")
+print("ENTER-3-EXIT")
+#create a loop to run the program until the user exits
+while True:
+#to handle invalid input
+ try:
+#take the menu user choice
+  choice=int(input("-ENTER YOUR CHOICE:"))
+  print("------------------------------------")
+  if choice==1:
+    print("===LOGIN===")
+#take the user input for login
+    try:
+      username=input("-ENTER YOUR USERNAME:")
+      accountnumber=input("-ENTER YOUR ACCOUNT NUMBER:")
+      password=input("-ENTER YOUR PASSWORD:")
+      
+      na_me=cursor.execute("""SELECT username FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      name=na_me[0]
+      pass_word=cursor.execute("""SELECT password FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
+      userpassword=str(pass_word[0])
+#check if the account match or exist for login
+      if accountnumberlist and username == name and password == userpassword:
+#call the account function to perform the operations
+       ACCOUNT(accountnumber)
+      else:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+    except:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+#create account
+  elif choice==2:
+   
+    print("===CREATE ACCOUNT===")
+#take the user input for creating account
