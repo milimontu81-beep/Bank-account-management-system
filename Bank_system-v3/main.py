@@ -107,4 +107,115 @@ def ACCOUNT(accountnumber):
 #show transaction history 
     elif choice==4:
       print("==TRANSACTION HISTORY==")
-      History=cursor.execute(f"""SELECT 1 FROM history WHERE accountnumber=?""",(accountnumber,)).fetchone()
+       History=cursor.execute(f"""SELECT 1 FROM history WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      history=cursor.execute(f"""SELECT * FROM history WHERE accountnumber=?""",(accountnumber,)).fetchall()
+      if History:
+        print("-Transaction history:")
+        count=1
+        for i in history:
+           print(f"{count}.{i[2]} with Rs.{i[3]},balancebefore Rs.{i[4]},balanceafter Rs.{i[5]},time:{i[6]},date:{i[7]}")
+           count+=1
+        print("------------------------------------")
+      else: 
+        print(" No transaction history found!")      
+#handle invalid input
+    else:  
+      print("-Invalid choice: please enter a no. between 1 to 5!")
+      print("------------------------------------")
+   except:
+     print("-Invalid input:please enter an integer!")
+     print("------------------------------------")
+#save the account information after account has been created
+def createaccount():
+     cursor.execute("""INSERT INTO accounts(accountnumber,username,password,phonenumber)
+     VALUES(?,?,?,?)""",(accountnumber,username, password,phonenumber))
+     connection.commit()
+     user_name=username.upper()
+     print(f"-''{user_name}', your  account has been created successfully!")
+     print("-Your account number is:",accountnumber)
+     print("-Your password is:",password)
+     print("-Your phone number is:",phonenumber)
+     print("------------------------------------") 
+#menu of the bank account management system 
+print("===WELCOME TO THE BANK OF INDIA===")
+print("ENTER-1-LOGIN")
+print("ENTER-2-CREATE ACCOUNT ")
+print("ENTER-3-EXIT")
+#create a loop to run the program until the user exits
+while True:
+#to handle invalid input
+ try:
+#take the menu user choice
+  choice=int(input("-ENTER YOUR CHOICE:"))
+  print("------------------------------------")
+  if choice==1:
+    print("===LOGIN===")
+#take the user input for login
+    try:
+      username=input("-ENTER YOUR USERNAME:")
+      accountnumber=input("-ENTER YOUR ACCOUNT NUMBER:")
+      password=input("-ENTER YOUR PASSWORD:")    
+      na_me=cursor.execute("""SELECT username FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      name=na_me[0]
+      pass_word=cursor.execute("""SELECT password FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
+      userpassword=pass_word[0]
+#check if the account match or exist for login
+      if accountnumberlist and username == name and password == userpassword:
+#call the account function to perform the operations
+       ACCOUNT(accountnumber)
+      else:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+    except:
+        print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+#create account
+  elif choice==2:
+   
+    print("===CREATE ACCOUNT===")
+#take the user input for creating account
+    username=input("-ENTER YOUR USERNAME:")
+    accountnumber=input("-ENTER 10 DIGIT ACCOUNT NUMBER:")
+    
+    accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
+    if accountnumberlist:
+     print("-ACCOUNT NUMBER ALREADY EXISTS!")
+     print("------------------------------------")
+    elif len(str(accountnumber))!=10:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    elif accountnumber.isdigit()==False:
+     print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
+     print("------------------------------------")
+    else:
+     password=input("-ENTER 8 CHARACTER TO CREATE PASSWORD:")
+     if len(str(password))!=8:
+      print("-INVALID PASSWORD, ENTER AN 8 CHARACTER PASSWORD!")
+      print("------------------------------------")
+     else:
+      phonenumber=input("-ENTER YOUR PHONE NUMBER:")
+      phonenumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE phonenumber=?""",(phonenumber,)).fetchall()
+      if len(phonenumber)!=10 or phonenumber.isdigit()==False:
+       print("-INVALID PHONE NUMBER, ENTER A 10 DIGIT NUMBER!")
+       print("-----------------------------------")
+      elif phonenumberlist:
+       print("-PHONE NUMBER ALREADY EXISTS!")
+       print("-----------------------------------") 
+      else:
+#create new table for each user for saving there transaction history 
+        createaccount()
+#exit from the application 
+  elif choice==3:
+    print("==THANKS==")
+    break
+  else:
+   print("-INVALID CHOICE, ENTER 1 OR 2!")
+   print("---------------------------------------")
+ except:
+  print("-INVALID INPUT, ENTER AN INTEGER!")
+  print("----------------------------------------")
+    
+    
+
+    
