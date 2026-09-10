@@ -107,7 +107,7 @@ def ACCOUNT(accountnumber):
 #show transaction history 
     elif choice==4:
       print("==TRANSACTION HISTORY==")
-       History=cursor.execute(f"""SELECT 1 FROM history WHERE accountnumber=?""",(accountnumber,)).fetchone()
+      History=cursor.execute(f"""SELECT 1 FROM history WHERE accountnumber=?""",(accountnumber,)).fetchone()
       history=cursor.execute(f"""SELECT * FROM history WHERE accountnumber=?""",(accountnumber,)).fetchall()
       if History:
         print("-Transaction history:")
