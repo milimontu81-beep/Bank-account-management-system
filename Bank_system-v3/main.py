@@ -15,7 +15,7 @@ class Account:
        self.balance = balance            
 #show the balance of the account 
       def see_balance(self):
-        Bal_ance=cursor.execute("""SELECT balance FROM accounts WHERE accountnumber=?""",(act_no,)).fetchone()
+        Bal_ance=cursor.execute("""SELECT balance FROM accounts WHERE accountnumber=?""",(self.act_no,)).fetchone()
         Balance=Bal_ance[0]
         print("==BALANCE==")
         print("-BALANCE RS.",Balance)
@@ -59,8 +59,9 @@ def ACCOUNT(accountnumber):
 #using conditional statements to perform the operation according to the user choice 
 #credit money to the account
     if choice==1:
-      print("==CREDIT==")
-      process="credited"
+     print("==CREDIT==")
+     process="credited"
+     try:
       amount=int(input(f"-Enter the amount to be {process} Rs."))
       if amount<=0:
         print("Invalid amount!")
@@ -70,15 +71,20 @@ def ACCOUNT(accountnumber):
         Balance=ba_lance[0]
         balanceafter=Balance+amount
         history=f"{process}"
+     
         account.see_history(history,accountnumber,amount,balanceafter)
         cursor.execute("""UPDATE accounts SET balance=? WHERE accountnumber=?""",(balanceafter,accountnumber))
         connection.commit()
         print("-Your account has been credited with rs.",amount)
         print("------------------------------------")
+     except ValueError:
+        print("Please,enter an valid amont! ")
+        print("------------------------------------") 
 #debit money from the account
     elif choice==2:
-      print("==DEBIT==")
-      process="debited"
+     print("==DEBIT==")
+     process="debited"
+     try:
       amount=int(input(f"-Enter the amount to be {process} Rs."))
       balance=cursor.execute("""SELECT balance FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
       Balance=balance[0]
@@ -95,6 +101,9 @@ def ACCOUNT(accountnumber):
         cursor.execute("""UPDATE accounts SET balance=? WHERE accountnumber=?""",(balanceafter,accountnumber))
         connection.commit()
         print("-Your account has been debited with rs.",amount)
+        print("------------------------------------")
+     except ValueError:
+        print("Please,Enter an valid amount!")
         print("------------------------------------")
 #logout the account
     elif choice==5:
@@ -122,7 +131,7 @@ def ACCOUNT(accountnumber):
     else:  
       print("-Invalid choice: please enter a no. between 1 to 5!")
       print("------------------------------------")
-   except:
+   except ValueError:
      print("-Invalid input:please enter an integer!")
      print("------------------------------------")
 #save the account information after account has been created
@@ -147,13 +156,15 @@ while True:
  try:
 #take the menu user choice
   choice=int(input("-ENTER YOUR CHOICE:"))
+  
   print("------------------------------------")
   if choice==1:
     print("===LOGIN===")
 #take the user input for login
     try:
-      username=input("-ENTER YOUR USERNAME:")
-      accountnumber=input("-ENTER YOUR ACCOUNT NUMBER:")
+     username=input("-ENTER YOUR USERNAME:")
+     try:
+      accountnumber=int(input("-ENTER YOUR ACCOUNT NUMBER:"))
       password=input("-ENTER YOUR PASSWORD:")    
       na_me=cursor.execute("""SELECT username FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
       name=na_me[0]
@@ -166,6 +177,9 @@ while True:
        ACCOUNT(accountnumber)
       else:
         print("-ACCOUNT NOT FOUND!")
+        print("------------------------------------")
+     except ValueError:
+        print("Invalid account!")
         print("------------------------------------")
     except:
         print("-ACCOUNT NOT FOUND!")
@@ -212,10 +226,18 @@ while True:
   else:
    print("-INVALID CHOICE, ENTER 1 OR 2!")
    print("---------------------------------------")
- except:
+ except ValueError:
   print("-INVALID INPUT, ENTER AN INTEGER!")
   print("----------------------------------------")
+ except sqlite3.Error as e:
+   print("Database error:",e)
+   print("----------------------------------------")
+  
     
     
 
-    
+                   
+                   
+              
+
+      
