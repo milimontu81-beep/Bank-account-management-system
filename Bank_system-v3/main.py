@@ -1,13 +1,13 @@
 # Bank account management system 
 import sqlite3
 connection=sqlite3.connect("bank.db")
+connection.execute("PRAGMA foreign_keys=ON")
 cursor=connection.cursor()
 #create a table with column accountnumber, username, phonenumber, password ,balance
-cursor.execute("""CREATE TABLE IF NOT EXISTS accounts(accountnumber INTEGER PRIMARY KEY,username TEXT NOT NULL,phonenumber INTEGER NOT NULL,password TEXT NOT NULL,balance INTEGER NOT NULL DEFAULT 0)""")
+cursor.execute("""CREATE TABLE IF NOT EXISTS accounts(accountnumber INTEGER PRIMARY KEY,username TEXT NOT NULL,phonenumber TEXT NOT NULL,password TEXT NOT NULL,balance INTEGER NOT NULL DEFAULT 0)""")
 #create a table with column id ,acountnumber,history,balancebefore,balanceafter,time,date
 cursor.execute("""CREATE TABLE IF NOT EXISTS history(id INTEGER PRIMARY KEY AUTOINCREMENT,accountnumber INTEGER NOT NULL,history TEXT NOT NULL,amount INTEGER NOT NULL,balancebefore INTEGER NOT NULL,balanceafter INTEGER NOT NULL,time TEXT NOT NULL DEFAULT (TIME('now','+5 hours','+30 minutes')),date TEXT NOT NULL DEFAULT (DATE('now','+5 hours','+30 minutes')) ,FOREIGN KEY (accountnumber) REFERENCES accounts(accountnumber))""")
 connection.commit()
-tables=cursor.execute("""SELECT name FROM sqlite_master WHERE type='table'""").fetchall() 
 # create a account class with attributes account number and balance    
 class Account:
       def __init__(self, act_no, balance):
@@ -27,8 +27,6 @@ class Account:
 #save the transaction history into sql database        
         cursor.execute("""INSERT INTO history(accountnumber,history,amount,balancebefore,balanceafter) 
         VALUES(?,?,?,?,?)""",(accountnumber,history,amount,Balance,balanceafter))
-        connection.commit()
-
 #take user input for login or create account 
 #manage the bank account operations
 def ACCOUNT(accountnumber):
@@ -79,7 +77,10 @@ def ACCOUNT(accountnumber):
         print("------------------------------------")
      except ValueError:
         print("Please,enter an valid amont! ")
-        print("------------------------------------") 
+        print("------------------------------------")
+     except sqlite3.Error as e:
+       connection.rollback()
+       print("Transaction failed:",e)
 #debit money from the account
     elif choice==2:
      print("==DEBIT==")
@@ -105,6 +106,9 @@ def ACCOUNT(accountnumber):
      except ValueError:
         print("Please,Enter an valid amount!")
         print("------------------------------------")
+     except sqlite3.Error as e:
+       connection.rollback()
+       print("Transaction failed:",e)
 #logout the account
     elif choice==5:
       print("==THANKS FOR USING OUR BANK==")
@@ -116,9 +120,8 @@ def ACCOUNT(accountnumber):
 #show transaction history 
     elif choice==4:
       print("==TRANSACTION HISTORY==")
-      History=cursor.execute(f"""SELECT 1 FROM history WHERE accountnumber=?""",(accountnumber,)).fetchone()
       history=cursor.execute(f"""SELECT * FROM history WHERE accountnumber=?""",(accountnumber,)).fetchall()
-      if History:
+      if history:
         print("-Transaction history:")
         count=1
         for i in history:
@@ -159,9 +162,8 @@ while True:
   
   print("------------------------------------")
   if choice==1:
-    print("===LOGIN===")
+     print("===LOGIN===")
 #take the user input for login
-    try:
      username=input("-ENTER YOUR USERNAME:")
      try:
       accountnumber=int(input("-ENTER YOUR ACCOUNT NUMBER:"))
@@ -169,7 +171,7 @@ while True:
       na_me=cursor.execute("""SELECT username FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
       name=na_me[0]
       pass_word=cursor.execute("""SELECT password FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
-      accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
+      accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchone()
       userpassword=pass_word[0]
 #check if the account match or exist for login
       if accountnumberlist and username == name and password == userpassword:
@@ -181,22 +183,14 @@ while True:
      except ValueError:
         print("Invalid account!")
         print("------------------------------------")
-    except:
-        print("-ACCOUNT NOT FOUND!")
-        print("------------------------------------")
 #create account
   elif choice==2:
    
     print("===CREATE ACCOUNT===")
 #take the user input for creating account
     username=input("-ENTER YOUR USERNAME:")
-    accountnumber=input("-ENTER 10 DIGIT ACCOUNT NUMBER:")
-    
-    accountnumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE accountnumber=?""",(accountnumber,)).fetchall()
-    if accountnumberlist:
-     print("-ACCOUNT NUMBER ALREADY EXISTS!")
-     print("------------------------------------")
-    elif len(str(accountnumber))!=10:
+    accountnumber=input("-ENTER 10 DIGIT ACCOUNT NUMBER:")   
+    if len(str(accountnumber))!=10:
      print("-INVALID ACCOUNT NUMBER, ENTER A 10 DIGIT NUMBER!")
      print("------------------------------------")
     elif accountnumber.isdigit()==False:
@@ -229,10 +223,13 @@ while True:
  except ValueError:
   print("-INVALID INPUT, ENTER AN INTEGER!")
   print("----------------------------------------")
+ except sqlite3.IntegrityError:
+   print("account already exist!")
+   print("----------------------------------------")
+  
  except sqlite3.Error as e:
    print("Database error:",e)
    print("----------------------------------------")
-  
     
     
 
