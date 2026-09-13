@@ -82,3 +82,17 @@ The History table is connected to the Accounts table using a Foreign Key.
 - ORDER BY transaction history
 - Improved login system
 - GUI or web interface
+
+## How to Run
+
+### Requirements
+- Python 3.x
+- No external libraries required
+
+### Steps
+
+1. Open the `Bank_system-v2` folder.
+2. Download `main.py` and `bank_data.json`.
+3. Keep both files in the same folder.
+4. Run `main.py` using Python 3.
+5. Follow the instructions shown in the terminal.
