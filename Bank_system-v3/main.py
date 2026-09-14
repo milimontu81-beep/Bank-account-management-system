@@ -203,7 +203,7 @@ while True:
       print("------------------------------------")
      else:
       phonenumber=input("-ENTER YOUR PHONE NUMBER:")
-      phonenumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE phonenumber=?""",(phonenumber,)).fetchall()
+      phonenumberlist=cursor.execute("""SELECT 1 FROM accounts WHERE phonenumber=?""",(phonenumber,)).fetchone()
       if len(phonenumber)!=10 or phonenumber.isdigit()==False:
        print("-INVALID PHONE NUMBER, ENTER A 10 DIGIT NUMBER!")
        print("-----------------------------------")
