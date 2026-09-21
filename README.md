@@ -208,6 +208,94 @@ After successfully logging in:
 3. Run `main.py` using Python 3.
 4. The `bank.db` database file will be created automatically.
 5. Follow the instructions shown in the terminal.
+---
+
+## Version 4
+
+An improved version of the Bank Account Management System with enhanced security, account management, and transaction search features.
+
+Version 4 builds on Version 3 by adding password hashing, hidden password input, account settings, transaction filtering, and account deletion.
+
+### Improvements
+
+- Password hashing using Argon2
+- Password verification using Argon2
+- Hidden password input using `getpass`
+- View account profile
+- Change password
+- Change phone number
+- Search transaction history by date
+- Filter transaction history by credit or debit
+- Delete account
+- Automatic deletion of related transaction history using `ON DELETE CASCADE`
+- Improved password validation
+- Improved account management
+- Improved input validation
+- Improved error handling
+
+### Account Settings
+
+After logging in, users can manage their account through the settings menu.
+
+Available options include:
+
+- View profile
+- Change password
+- Change phone number
+- Search transaction history by date
+- Filter transactions by credit or debit
+- Delete account
+- Return to account menu
+
+### Password Security
+
+Version 4 improves password security by using **Argon2** for password hashing and verification.
+
+Passwords are not stored as plain text in the database.
+
+The `getpass` module is also used to hide password input during login and sensitive account operations.
+
+### Transaction Search
+
+Users can search their transaction history using:
+
+- Specific date
+- Credit transactions
+- Debit transactions
+
+This makes it easier to find specific transactions without displaying the entire transaction history.
+
+### Account Deletion
+
+Users can permanently delete their account after password verification.
+
+When an account is deleted, its related transaction history is automatically deleted from the database using:
+
+`ON DELETE CASCADE`
+
+### Technology Used
+
+- Python 3
+- SQLite3
+- SQL
+- Argon2
+- `getpass`
+- Object-Oriented Programming (OOP)
+
+## How to Run
+
+### Requirements
+
+- Python 3.x
+- SQLite3 (included with Python)
+
+### Steps
+
+1. Open the `Bank_system-v3` folder.
+2. Download `main.py`.
+3. Run `main.py` using Python 3.
+4. The `bank.db` database file will be created automatically.
+5. Follow the instructions shown in the terminal.
 
 ### Project Progression
 
@@ -220,6 +308,12 @@ The project has progressed from:
 **Version 2 → JSON File Handling and Multiple Users**
 
 **Version 3 → SQLite Database and Relational Database Management**
+
+**Version 4 → Password Security, Account Management, and Transaction Search**
+
+Version 4 improves the Version 3 SQLite-based system by adding better password security and more account-management features.
+
+
 
 
 
