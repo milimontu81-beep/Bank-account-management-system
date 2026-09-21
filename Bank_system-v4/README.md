@@ -81,11 +81,8 @@ This project helped me practice SQL and database concepts such as:
 - `UPDATE`
 - `DELETE`
 - `WHERE`
-- `COUNT`
-- `SUM`
 - Primary keys
 - Foreign keys
-- `JOIN`
 - `ON DELETE CASCADE`
 
 ## What I Learned
